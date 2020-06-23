@@ -1,3 +1,4 @@
+
 # myvuecppwasmproject
 
 Basic Vue plus wasm project using emscripten
@@ -13,12 +14,14 @@ emcc src/cpp/function.c -o js/function.js -s EXTRA_EXPORTED_RUNTIME_METHODS=['cc
 Notice here the output file is set to js/function.js because the generated js from emscripten will be looking for it's wasm file inside a directory called js
 
 The settings flag add to the compilation does the following 
-* EXTRA_EXPORTED_RUNTIME_METHODS=['ccall','cwrap'] | Tells the compiler the you want to use the runtime function `ccall` and `cwrap`
-* EXPORTED_FUNCTIONS="['_int_sqrt', 'my_log']" | Tells compiler which functions you want to be accessible from compiled code
-* ENVIRONMENT=web | Sets the js output to run on the web
-* EXPORT_ES6=1 | Creates js to be imported using the `import` statement  
-* MODULARIZE=1 | Wraps the generated code's `Module` object in a function
-* USE_ES6_IMPORT_META=0 | Disables ES6 Module relative import feature to auto detect WASM Module path since vue does not support this
+Setting | Description
+------------------------------ | ---------------------------------------
+`EXTRA_EXPORTED_RUNTIME_METHODS=['ccall','cwrap']` | Tells the compiler the you want to use the runtime function `ccall` and `cwrap`
+`EXPORTED_FUNCTIONS="['_int_sqrt', 'my_log']"` | Tells compiler which functions you want to be accessible from compiled code
+`ENVIRONMENT=web` | Sets the js output to run on the web
+`EXPORT_ES6=1` | Creates js to be imported using the `import` statement  
+`MODULARIZE=1` | Wraps the generated code's `Module` object in a function
+`USE_ES6_IMPORT_META=0` | Disables ES6 Module relative import feature to auto detect WASM Module path since vue does not support this
 
 To find more emscripten compile settings go to [src/settings.js](https://github.com/emscripten-core/emscripten/blob/master/src/settings.js)
 
