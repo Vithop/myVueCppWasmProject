@@ -27,14 +27,50 @@
       <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
     </ul>
+    <p button @click="callSqrt(sumNum)"> Sqrt!</p>
+    <p> Result: {{result}}</p>    
+    <p button @click="callLog(sumNum)"> Log!</p>
+    <p> Log Result: {{logResult}}</p>  
+    <p button @click="addOne"> Add One!</p>
+    <p> Sum Numb: {{sumNum}}</p>
   </div>
 </template>
 
 <script>
+import Module from '../../js/function';
+//To create a local instance of your c wasm module use the following 
+//let instance = null
+//And replace all the global module instances "$globalModule" with this local "instance"
+
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data() {
+    return {
+      result:null,
+      logResult:1,
+      sumNum:1
+    }
+  },
+  beforeCreate(){
+    if(this.$globalModule === null){
+      new Module().then(myModule =>{
+        this.$globalModule = myModule;
+      })
+    }
+  },
+  methods: {
+    callSqrt(a){
+      this.result = this.$globalModule._int_sqrt(a);
+    },
+    callLog(a){
+      this.logResult = this.$globalModule._my_log(a);
+    },
+    addOne(){
+      this.sumNum++;
+    }
   }
 }
 </script>
