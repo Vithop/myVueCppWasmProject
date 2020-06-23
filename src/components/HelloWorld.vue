@@ -31,16 +31,22 @@
     <p> Result: {{result}}</p>    
     <p button @click="callLog(sumNum)"> Log!</p>
     <p> Log Result: {{logResult}}</p>  
+    <p button @click="callLerp(sumNum, result, logResult)"> Lerp!</p>
+    <p> Sum Numb: {{lerpResult}}</p>
     <p button @click="addOne"> Add One!</p>
     <p> Sum Numb: {{sumNum}}</p>
   </div>
 </template>
 
 <script>
+//Plain emscripten Module for C functions
 import Module from '../../js/function';
-//To create a local instance of your c wasm module use the following 
-//let instance = null
-//And replace all the global module instances "$globalModule" with this local "instance"
+//Emscripten C++ Module binded using Embind
+import lerpModule from '../../js/lerp'
+
+//Instead of using a global instance for the function Module here we implement a local instance of the module
+let lerpInstance = null;
+
 
 export default {
   name: 'HelloWorld',
@@ -51,13 +57,20 @@ export default {
     return {
       result:null,
       logResult:1,
+      lerpResult:0,
       sumNum:1
     }
   },
   beforeCreate(){
+    //Before using our wasm modules we must wait for the runtime to be initialized before we can use it
     if(this.$globalModule === null){
       new Module().then(myModule =>{
         this.$globalModule = myModule;
+      })
+    }
+    if(lerpInstance === null){
+      new lerpModule().then(myLerp =>{
+        lerpInstance = myLerp;
       })
     }
   },
@@ -67,6 +80,9 @@ export default {
     },
     callLog(a){
       this.logResult = this.$globalModule._my_log(a);
+    },
+    callLerp(a,b,c){
+      this.lerpResult = lerpInstance.lerp(a,b,c);
     },
     addOne(){
       this.sumNum++;

@@ -25,6 +25,11 @@ Setting | Description
 
 To find more emscripten compile settings go to [src/settings.js](https://github.com/emscripten-core/emscripten/blob/master/src/settings.js)
 
+To compile C++ functions and classes we must use Embind which allows us to use it in a more natural way by js
+```
+emcc --bind src/cpp/lerp.cpp -o js/lerp.js -s ENVIRONMENT=web -s EXPORT_ES6=1 -s MODULARIZE=1 -s USE_ES6_IMPORT_META=0
+```
+Since we are calling C++ functions we can omit the `EXTRA_EXPORTED_RUNTIME_METHODS` and `EXPORTED_FUNCTIONS` settings
 
 After compiling you can go ahead and install your node_modules and serve your project
 
